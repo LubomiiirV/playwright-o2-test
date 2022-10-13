@@ -1,11 +1,17 @@
 # playwright-o2-test
 
 dotnet new nunit -n PlaywrightTests
+
 cd PlaywrightTests
+
 dotnet add package Microsoft.Playwright.NUnit
+
 dotnet build
+
 dotnet tool install --global PowerShell
+
 pwsh bin/Debug/netX/playwright.ps1 install
+
 
 Test Generator:
 
