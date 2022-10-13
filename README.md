@@ -10,8 +10,9 @@ dotnet build
 
 dotnet tool install --global PowerShell
 
-pwsh bin/Debug/netX/playwright.ps1 install
+bin/Debug/net6.0(<= dopln aktualnu verziu )/playwright.ps1 install
 
+dotnet test
 
 Test Generator:
 
@@ -45,3 +46,39 @@ pouzitie features ako screenshot obrazka alebo nahratie videa priamo z IDE
 vyhladanie konkretneho telefonu v kombinacii s pausalom
 
 implementacia page object modelu
+
+Playwright for .NET 🎭
+NuGet version Join Slack
+
+Linux macOS Windows
+Chromium 107.0.5304.18 ✅ ✅ ✅
+WebKit 16.0 ✅ ✅ ✅
+Firefox 105.0.1 ✅ ✅ ✅
+Playwright for .NET is the official language port of Playwright, the library to automate Chromium, Firefox and WebKit with a single API. Playwright is built to enable cross-browser web automation that is ever-green, capable, reliable and fast.
+
+Documentation
+https://playwright.dev/dotnet/docs/intro
+
+API Reference
+https://playwright.dev/dotnet/docs/api/class-playwright
+
+using System.Threading.Tasks;
+using Microsoft.Playwright;
+
+class Program
+{
+public static async Task Main()
+{
+using var playwright = await Playwright.CreateAsync();
+await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = false });
+var page = await browser.NewPageAsync();
+await page.GotoAsync("https://playwright.dev/dotnet");
+await page.ScreenshotAsync(new() { Path = "screenshot.png" });
+}
+}
+Other languages
+More comfortable in another programming language? Playwright is also available in
+
+TypeScript,
+Python
+Java.

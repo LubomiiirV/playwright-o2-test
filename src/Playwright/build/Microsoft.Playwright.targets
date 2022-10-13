@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="CopyPlaywrightFilesToOutput" AfterTargets="BeforeBuild">
+    <PropertyGroup>
+      <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == ''">%(RuntimePack.RuntimeIdentifier)</PlaywrightPlatform>
+      <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == ''">$(RuntimeIdentifier)</PlaywrightPlatform>
+      <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == ''">$(RuntimeIdentifiers)</PlaywrightPlatform>
+      <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('Linux')) AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X64'">linux-x64</PlaywrightPlatform>
+      <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('Linux')) AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64'">linux-arm64</PlaywrightPlatform>
+      <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('Windows'))">win</PlaywrightPlatform>
+      <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">osx</PlaywrightPlatform>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(PlaywrightPlatform)' != 'none'">
+       <!-- 'linux' to stay backwards compatible -->
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux-x64\**" Condition="$(PlaywrightPlatform.Contains('linux')) OR $(PlaywrightPlatform.Contains('linux-x64'))">
+        <PlaywrightFolder>node\linux-x64\</PlaywrightFolder>
+      </_PlaywrightCopyItems>
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux-arm64\**" Condition="$(PlaywrightPlatform.Contains('linux-arm64'))">
+        <PlaywrightFolder>node\linux-arm64\</PlaywrightFolder>
+      </_PlaywrightCopyItems>
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\win32_x64\**" Condition="$(PlaywrightPlatform.Contains('win'))">
+        <PlaywrightFolder>node\win32_x64\</PlaywrightFolder>
+      </_PlaywrightCopyItems>
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\mac\**" Condition="$(PlaywrightPlatform.Contains('osx'))">
+        <PlaywrightFolder>node\mac\</PlaywrightFolder>
+      </_PlaywrightCopyItems>
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\**" Condition="'@(_PlaywrightCopyItems->Count())' == '0'">
+        <PlaywrightFolder>node\</PlaywrightFolder>
+      </_PlaywrightCopyItems>
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\LICENSE">
+        <PlaywrightFolder>node\</PlaywrightFolder>
+      </_PlaywrightCopyItems>
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\package\**">
+        <PlaywrightFolder>package\</PlaywrightFolder>
+      </_PlaywrightCopyItems>
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="@(_PlaywrightCopyItems)">
+        <Link>.playwright\%(_PlaywrightCopyItems.PlaywrightFolder)%(RecursiveDir)%(FileName)%(Extension)</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <PublishState>Included</PublishState>
+        <Visible>false</Visible>
+        <Pack>false</Pack>
+      </Content>
+      <Content Include="$(MSBuildThisFileDirectory)playwright.ps1">
+        <Link>playwright.ps1</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <PublishState>Included</PublishState>
+        <Visible>false</Visible>
+        <Pack>false</Pack>
+      </Content>
+    </ItemGroup>
+  </Target>
+</Project>
