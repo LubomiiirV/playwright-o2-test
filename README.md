@@ -4,6 +4,8 @@ dotnet new nunit -n PlaywrightTests
 
 cd PlaywrightTests
 
+dotnet add package Microsoft.Playwright
+
 dotnet add package Microsoft.Playwright.NUnit
 
 dotnet build
