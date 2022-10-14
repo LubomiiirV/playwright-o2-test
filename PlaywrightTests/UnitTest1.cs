@@ -1,6 +1,5 @@
 using System.Text.RegularExpressions;
 using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
 
 namespace PlaywrightTests;
 
@@ -15,10 +14,10 @@ public class Tests : PageTest
     await Page.GotoAsync("https://www.o2.sk");
 
   }
+
   [Test]
   public async Task ChodNaO2Sk()
   {
-
     // Expect page to have URL.
     await Expect(Page).ToHaveURLAsync(new Regex("https://www.o2.sk"));
     await Page.ScreenshotAsync(new()
@@ -26,7 +25,6 @@ public class Tests : PageTest
       Path = "screenshot.png",
       FullPage = true,
     });
-
 
   }
 
@@ -47,41 +45,49 @@ public class Tests : PageTest
       FullPage = true,
     });
 
-    // click Mobilne telefony
-    await Page.GetByText("Mobilné telefóny").ClickAsync();
-    await Expect(Page).ToHaveURLAsync("https://www.o2.sk/e-shop/produkty/telefony");
-    await Page.WaitForTimeoutAsync(1500);
-
-    await Page.ScreenshotAsync(new()
-    {
-      Path = "screenshot2.png",
-      FullPage = true,
-
-    });
-
-    // choose a device
-    await Page.GetByText("Apple iPhone 14 256GB Fialový").ClickAsync();
-    await Expect(Page).ToHaveURLAsync("https://www.o2.sk/e-shop/produkt/apple-iphone-14-256gb-fialovy");
-    await Page.WaitForTimeoutAsync(1500);
-
-    await Page.ScreenshotAsync(new()
-    {
-      Path = "screenshot3.png",
-      FullPage = true,
-
-    });
-
   }
-  //   [Test]
-  //   public async Task VyberteAkykolvekTelefonNaSkladeAKupteTelefonSProgramom()
-  //   {
-  //     //
-  //     await Page
-  //       .Locator('o2-button:has-text("Kúpiť za plnú sumu")')
-  //       .GetByRole('button')
-  //       .ClickAsync();
-  //     await Expect(Page).ToHaveURLAsync("https://www.o2.sk/e-shop/kosik");
-  //   }
+
+    [Test]
+    public async Task VyberteAkykolvekTelefonNaSkladeAKupteTelefonSProgramom()
+    {
+      // click Mobilne telefony
+      var mobile = Page.GetByRole("link='Mobilné telefóny");
+      await Page.GetByRole("link='Mobilné telefóny'").ClickAsync();
+      await Expect(Page).ToHaveURLAsync("https://www.o2.sk/e-shop/produkty/telefony");
+      await Page.WaitForTimeoutAsync(1500);
+
+      await Page.ScreenshotAsync(new()
+      {
+        Path = "screenshot2.png",
+        FullPage = true,
+
+      });
+
+      // choose a device
+      await Page.GetByText("Apple iPhone 14 256GB Fialový").ClickAsync();
+      await Expect(Page).ToHaveURLAsync("https://www.o2.sk/e-shop/produkt/apple-iphone-14-256gb-fialovy");
+      await Page.WaitForTimeoutAsync(1500);
+
+      await Page.ScreenshotAsync(new()
+      {
+        Path = "screenshot3.png",
+        FullPage = true,
+
+      });
+
+      // buy device
+      await Page.GetByText("Kúpiť za plnú sumu").ClickAsync();
+      // var phone = Page.Locator("text='Kúpiť za plnú sumu'");
+      // await phone.ClickAsync();
+      await Page.ScreenshotAsync(new()
+      {
+        Path = "screenshot4.png",
+        FullPage = true,
+
+      });
+
+      await Expect(Page).ToHaveURLAsync("https://www.o2.sk/e-shop/kosik");
+    }
 
   //   [Test]
   //    public async Task VyplnteVsetkyPovinnePoliaAOznactePovinneSuhlasyAKliknitePotvrdit.TuTestSkonciNakolkoVDalsomKrokuByStePotvrdiliObjednavkuFinalneCoNieJeNutne() 
